@@ -1,0 +1,82 @@
+select * from employees;
+select * from locations;
+select * from departments;
+select * from jobs;
+
+#Q1-------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT DEPARTMENTS.LOCATION_ID,STREET_ADDRESS,CITY,STATE_PROVINCE,COUNTRY_NAME,DEPARTMENT_NAME FROM DEPARTMENTS,LOCATIONS,COUNTRIES
+WHERE COUNTRIES.COUNTRY_ID = LOCATIONS.COUNTRY_ID
+AND DEPARTMENTS.LOCATION_ID = LOCATIONS.LOCATION_ID;
+
+#Q2------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT CONCAT(FIRST_NAME,CONCAT(' ',LAST_NAME)) AS NAME, DEPARTMENT_NAME,E.DEPARTMENT_ID FROM EMPLOYEES E, DEPARTMENTS D
+WHERE E.DEPARTMENT_ID = D.DEPARTMENT_ID;
+
+#Q3--------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT FIRST_NAME,LAST_NAME,JOB_TITLE,D.DEPARTMENT_ID,DEPARTMENT_NAME,L.CITY
+FROM JOBS J, DEPARTMENTS D, LOCATIONS L, EMPLOYEES E
+WHERE E.DEPARTMENT_ID = J.JOB_ID
+AND E.JOB_ID = J.JOB_ID
+AND L.LOCATION_ID = D.LOCATION_ID
+AND L.CITY = 'London';
+
+#Q4-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT E.EMPLOYEE_ID AS EMPLOYEE_ID,E.LAST_NAME AS EMPLOYEE_NAME,M.EMPLOYEE_ID AS MANAGER_ID, M.LAST_NAME AS MANAGER_NAME
+FROM EMPLOYEES AS E, EMPLOYEES AS M
+WHERE M.EMPLOYEE_ID = E.MANAGER_ID;
+
+#Q5-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT EM.FIRST_NAME, EM.LAST_NAME, EM.HIRE_DATE
+FROM EMPLOYEES E, EMPLOYEES EM
+WHERE EM.HIRE_DATE > E.HIRE_DATE 
+AND E.LAST_NAME = 'Jones';
+
+#Q6-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT DEPARTMENT_NAME, D.DEPARTMENT_ID, COUNT(E.DEPARTMENT_ID)
+FROM EMPLOYEES E, DEPARTMENTS D
+WHERE D.DEPARTMENT_ID = E.DEPARTMENT_ID
+GROUP BY DEPARTMENT_NAME;
+
+#Q7--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT E.EMPLOYEE_ID,E.DEPARTMENT_ID,JOB_TITLE,DATEDIFF(END_DATE,START_DATE) AS 'Number of days'
+FROM JOB_HISTORY JH, EMPLOYEES E,JOBS J
+WHERE E.JOB_ID = J.JOB_ID
+AND E.EMPLOYEE_ID = JH.EMPLOYEE_ID
+AND E.DEPARTMENT_ID=90;
+
+#Q8---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT E.EMPLOYEE_ID,E.DEPARTMENT_ID, E.DEPARTMENT_ID, FIRST_NAME, LAST_NAME
+FROM EMPLOYEES E,DEPARTMENTS D
+WHERE E.DEPARTMENT_ID = D.DEPARTMENT_ID
+AND E.EMPLOYEE_ID = D.MANAGER_ID; 
+
+#Q9---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT DEPARTMENT_NAME,FIRST_NAME, LAST_NAME, CITY
+FROM EMPLOYEES E,DEPARTMENTS D, LOCATIONS L
+WHERE E.DEPARTMENT_ID = D.DEPARTMENT_ID
+AND E.EMPLOYEE_ID = D.MANAGER_ID
+AND L.LOCATION_ID = D.LOCATION_ID;
+
+#Q10------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+SELECT JOB_TITLE, AVG(SALARY) FROM EMPLOYEES E, JOBS J
+WHERE E.JOB_ID = J.JOB_ID
+GROUP BY JOB_TITLE; 
+
+#Q11--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT JOB_TITLE, FIRST_NAME,LAST_NAME, (SALARY-MIN_SALARY) AS DIFFSAL
+FROM EMPLOYEES E, JOBS J
+WHERE E.JOB_ID = J.JOB_ID;
+
+#Q12------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT FIRST_NAME, E.JOB_ID, JOB_HISTORY.*
+FROM EMPLOYEES E, JOB_HISTORY
+WHERE E.EMPLOYEE_ID = JOB_HISTORY.EMPLOYEE_ID
+AND E.SALARY > 10000;
+
+#Q13-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT DEPARTMENT_NAME,FIRST_NAME,LAST_NAME, HIRE_DATE, SALARY
+FROM DEPARTMENTS D, EMPLOYEES E
+WHERE D.DEPARTMENT_ID = E.DEPARTMENT_ID
+AND E.EMPLOYEE_ID = D.MANAGER_ID
+AND (SYSDATE()-HIRE_DATE) > (15*365);
